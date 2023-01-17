@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Search {% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+	
+
+			<h3>Search Results for: <span class='text-info' >"{{ request.GET.keyword }}"</span> </h3>
+			<hr>
+			{% for result in results %}
+				<div class="row shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+
+					<div class="col-md-12">
+						<h4>{{result.name|slice:":50"}}</h4>
+						<p>{{result.quantity }}</p>
+						<p>{{ result.created_at }}</p>
+						<a href=" {% url 'ecomapp:addtocart' result.id %} " class='btn btn-primary'>Add To Cart</a>
+					</div>
+				</div>
+			{% endfor %}
+	
+</div>
+{% endblock %}

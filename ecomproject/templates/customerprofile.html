@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile {% endblock %}
+
+
+
+{% block content %}
+
+<style>
+	#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+    #customers tr:hover {background-color: #ddd;}
+
+    #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #d14c0e;
+    color: white;
+    }
+
+
+</style>
+	<div class="container" >
+		<div class="row">
+			<div class="col-md-4">
+				<h3>Details Informations</h3>
+				<p><span class="font-weight-bold">Full Name: </span> {{request.user.first_name}} {{request.user.last_name}} </p>
+				<p><span class="font-weight-bold">Username: </span> {{request.user.username}}</p>
+				<p><span class="font-weight-bold">Email: </span> {{request.user.email}}</p>
+				<p><span class="font-weight-bold">Joined On: </span> {{request.user.date_joined}}</p>
+			</div>
+			<div class="col-md-8">
+				<h3>Previous Orders</h3>
+				<hr>
+				<table id="customers">
+					<thead>
+						<tr>
+							<th>SN</th>
+							<th>Order ID</th>
+							<th>Ordered On</th>
+							<th>Status</th>
+							<th>jira_number</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for order in orders %}
+						<tr>
+							<td>{{forloop.counter}}</td>
+							<td><a href="{% url 'ecomapp:customerorderdetail' order.pk %}">#Order_{{order.id}}</a></td>
+							<td>{{order.created_at|timesince}} ago</td>
+							<td>{{order.order_status}}</td>
+							<td>{{order.jira_number}}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

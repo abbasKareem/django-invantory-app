@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h3>Order Detail</h3> <hr>
+            <p>
+                <span class="fontBold">Order Status: </span>
+
+                {% if ord_obj.order_status == 'In Box' %}
+                    <span class="fontBold text_color_inBox" >{{ord_obj.order_status}}</span>
+                {% endif %}
+                {% if ord_obj.order_status == 'Approved' %}
+                <span class="fontBold text_color_approved" >{{ord_obj.order_status}}</span>
+                {% endif %}
+                {% if ord_obj.order_status == 'Caneled' %}
+                <span class="fontBold text_color_cancel" >{{ord_obj.order_status}}</span>
+                {% endif %}
+
+            </p>
+            <div class="row mb-2 mx-auto" >
+                <p class="mr-3">Download order: </p>
+                
+                 <button class="btn btn-primary" {% if ord_obj.order_status != 'Approved' %} disabled {% endif %} onclick="downloadPDF()" >Download</button>
+                 <button onclick="downloadPDF()" >pdf</button>
+                
+            </div>
+            <hr>
+            <p><span class="fontBold">Order ID: </span>#ORDER_{{ord_obj.id}}</p>
+            <span class="fontBold" >Order status:  {{ord_obj.order_status}}</span>
+            <p><span class="fontBold">Order On: </span>{{ord_obj.created_at}} ({{ord_obj.created_at|timesince}})</p>
+            <p><span class="fontBold">Customer Informations: </span>By: {{ord_obj.ordered_by}}</p>
+            <p class="fontBold">Order Jira Number : {{ord_obj.jira_number}}</p>
+
+
+
+            <hr>
+
+            <h4>Order Items</h4>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in ord_obj.cart.cartproduct_set.all %}
+                        <tr>
+                            <td>{{ forloop.counter}}</td>
+                            <td><a target="_blank" href="{% url 'ecomapp:productdetails' cp.product.slug %}">{{cp.product.name}}</a></td>
+
+                            <td>{{cp.quantity}}</td>
+                
+                        
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================
+
+
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Order Detail {% endblock %}
+
+{% block content %}
+
+<style>
+	.jira_style {
+		 background-color: green;
+	}
+	.text_color_approved {
+		background-color: rgb(11, 129, 0);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+	}
+	.text_color_inBox {
+		background-color: rgb(0, 118, 129);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+	}
+	.text_color_cancel {
+		background-color: rgba(253, 6, 6, 0.656);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+
+	}
+
+	.fontBold{
+		font-weight: bold;
+	}
+
+
+</style>
+	<div >
+		<div>
+			<div>
+				<h3>Order Detail</h3> <hr>
+				<p>
+					<span class="fontBold">Order Status: </span>
+
+					{% if ord_obj.order_status == 'In Box' %}
+						<span class="fontBold text_color_inBox" >{{ord_obj.order_status}}</span>
+					{% endif %}
+					{% if ord_obj.order_status == 'Approved' %}
+					<span class="fontBold text_color_approved" >{{ord_obj.order_status}}</span>
+					{% endif %}
+					{% if ord_obj.order_status == 'Caneled' %}
+					<span class="fontBold text_color_cancel" >{{ord_obj.order_status}}</span>
+					{% endif %}
+
+				</p>
+				<div >
+					<p >Download order: </p>
+					
+					 <button  {% if ord_obj.order_status != 'Approved' %} disabled {% endif %} onclick="downloadPDF()" >Download</button>
+					 <button onclick="downloadPDF()" >pdf</button>
+					
+				</div>
+				<hr>
+				<p><span class="fontBold">Order ID: </span>#ORDER_{{ord_obj.id}}</p>
+				<span class="fontBold" >Order status:  {{ord_obj.order_status}}</span>
+				<p><span class="fontBold">Order On: </span>{{ord_obj.created_at}} ({{ord_obj.created_at|timesince}})</p>
+				<p><span class="fontBold">Customer Informations: </span>By: {{ord_obj.ordered_by}}</p>
+				<p class="fontBold">Order Jira Number : {{ord_obj.jira_number}}</p>
+
+
+
+				<hr>
+
+				<h4>Order Items</h4>
+				<table >
+					<thead>
+						<tr>
+							<th>SN</th>
+							<th>Item</th>
+							<th>Quantity</th>
+							
+							
+						</tr>
+					</thead>
+					<tbody>
+						{% for cp in ord_obj.cart.cartproduct_set.all %}
+							<tr>
+								<td>{{ forloop.counter}}</td>
+								<td><a target="_blank" href="{% url 'ecomapp:productdetails' cp.product.slug %}">{{cp.product.name}}</a></td>
+
+								<td>{{cp.quantity}}</td>
+					
+							
+							</tr>
+						{% endfor %}
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		function downloadPDF() {
+  $.ajax({
+    type: "GET",
+    url: '/generate-pdf/',
+    success: function(response) {
+      var a = document.createElement("a");
+      a.href = window.URL.createObjectURL(new Blob([response], {type: "application/pdf"}));
+      a.download = "template.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  });
+}
+	</script>
+{% endblock %}

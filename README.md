@@ -1,0 +1,1 @@
+# Invantory webapp build using django

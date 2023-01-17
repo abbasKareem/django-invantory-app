@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+
+<div class='container'>
+  {% if request.user and not request.user.is_anonymous %}
+
+  <h1 class='text-center'>Welcome {{ request.user }}</h1>
+
+  {% else %}
+  <h1 class='text-center'>Welcome to Invantory website</h1>
+  {% endif %}
+    <hr>
+
+
+    {% if request.user and not request.user.is_anonymous %}
+
+   
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+  
+        <div class="pb-3 h5">All Items</div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+
+  
+          {% for p in product_list %}
+  
+          
+          <div class="col">
+            <div class="card shadow-sm mb-2">
+  
+                  <div class="card-body">
+                    <p class="card-text text-center">
+                      <a class="text-dark text-decoration-none"  href="{%  url 'ecomapp:productdetails' p.slug  %}">
+                          <span style="color: rgb(141, 3, 3); font-weight: 500; font-size: larger;">{{ p.name|slice:":50" }}</span> 
+                      </a>
+                      <hr>
+                    </p>
+                    <p class="text-center">
+                      <span style="color: rgb(148, 21, 207);" >category: </span>
+                      <span style="color: rgb(207, 21, 21);" > {{ p.category }}</span>
+                      </p>
+                  <p  class="text-center">Quantity: {{ p.quantity }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted">{{ p.created_at }}</small>
+                  </div>
+                  <div class="text-center mt-3"  >
+                      <a href=" {% url 'ecomapp:addtocart' p.id %} " class='btn btn-primary'>Add To Cart</a>
+                  </div>
+              </div>
+              </div>
+          </div>
+  
+          {% endfor %}
+  
+        </div>
+      </div>
+    </div>
+  
+
+
+  <nav aria-label="..." class="mt-5">
+      <ul class="pagination">
+          {% if product_list.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ product_list.previous_page_number }}">Previous</a>
+              </li>
+          {% else %}
+          <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+          </li>
+        {% endif %}
+
+        {% for i in product_list.paginator.page_range %}
+          {% if i == product_list.number %}
+              <li class="page-item active"><a class="page-link">{{i}}</a></li>
+          {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if product_list.has_next %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ product_list.next_page_number }}">Next</a>
+          </li>
+         {% else %}
+              <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1">Next</a>
+              </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+
+
+
+
+
+
+  
+    {% else %}
+    <h1 class='text-center'>Please Login ... <a href="{% url 'ecomapp:customerlogin' %}">Login</a></h1>
+    
+    {% endif %}
+
+
+
+
+</div>
+{% endblock %}

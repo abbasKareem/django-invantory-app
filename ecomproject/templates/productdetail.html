@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} {{product.name}} {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            
+          
+        </div>
+        <div class="col-md-8">
+            <h6>{{ product.name }}</h6>
+            <h5>Category: {{ product.category }}</h5>
+            <h5>Quantity:  {{ product.quantity}}</h5>
+            <a href=" {% url 'ecomapp:addtocart' product.id %} " class='btn btn-info my-3'>Add To Cart</a>
+            <hr>
+            
+            
+            <p>Date Of Creation: {{ product.created_at}}</p>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Order Detail {% endblock %}
+
+{% block content %}
+
+<style>
+	.jira_style {
+		 background-color: green;
+	}
+	.text_color_approved {
+		background-color: rgb(11, 129, 0);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+	}
+	.text_color_inBox {
+		background-color: rgb(0, 118, 129);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+	}
+	.text_color_cancel {
+		background-color: rgba(253, 6, 6, 0.656);
+		color: white;
+		border-radius: 2px;
+		padding: 4px;
+
+	}
+
+	.fontBold{
+		font-weight: bold;
+	}
+
+
+</style>
+
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h3>Order Detail</h3> <hr>
+            <p>
+                <span class="fontBold">Order Status: </span>
+
+                {% if ord_obj.order_status == 'In Box' %}
+                    <span class="fontBold text_color_inBox" >{{ord_obj.order_status}}</span>
+                {% endif %}
+                {% if ord_obj.order_status == 'Approved' %}
+                <span class="fontBold text_color_approved" >{{ord_obj.order_status}}</span>
+                {% endif %}
+                {% if ord_obj.order_status == 'Caneled' %}
+                <span class="fontBold text_color_cancel" >{{ord_obj.order_status}}</span>
+                {% endif %}
+
+            </p>
+            <hr>
+            <p><span class="fontBold">Order ID: </span>#ORDER_{{ord_obj.id}}</p>
+            <span class="fontBold" >Order status:  {{ord_obj.order_status}}</span>
+            <p><span class="fontBold">Order On: </span>{{ord_obj.created_at}} ({{ord_obj.created_at|timesince}})</p>
+            <p><span class="fontBold">Customer Informations: </span>By: {{ord_obj.ordered_by}}</p>
+            <p> <span  class="fontBold" >Order Jira Number :</span> <span style="background-color: #99e4d3; padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 4px;">{{ord_obj.jira_number}}</span></p>
+
+
+
+            <hr>
+
+            <p>{{ name }}</p>
+            <p>The name</p>
+
+            <h4>Order Items</h4>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in ord_obj.cart.cartproduct_set.all %}
+                        <tr>
+                            <td>{{cp.product.name}}</a></td>
+                            <td>{{cp.quantity}}</td>
+                        
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
