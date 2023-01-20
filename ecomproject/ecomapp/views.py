@@ -386,6 +386,8 @@ class AdminOrderDetailView(AdminRequiredMixin, DeleteView):
 
 class AdminOrdersListView(AdminRequiredMixin, ListView):
     template_name = 'adminpages/adminorderslist.html'
+    queryset = Order.objects.all().order_by("-id")
+    context_object_name = "allorders"
 
 class AdminOrderStatusChangeView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):

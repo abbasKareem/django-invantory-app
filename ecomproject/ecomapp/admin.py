@@ -73,7 +73,7 @@ class ProductAdmin(SimpleHistoryAdmin, ImportExportModelAdmin, admin.ModelAdmin)
 
     prepopulated_fields = {'slug': ('name',)}
     # list_editable = ['quantity', 'exist_in_stock', 'jira_number']
-    history_list_display = ['name', 'quantity',  'category',
+    history_list_display = ['name', 'quantity',  'category', 'about_to_end',
                             'jira_number', 'bar_code', 'exist_in_stock']
                             
     def has_delete_permission(self, request, obj=None):
