@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 from django.urls import reverse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Admin(models.Model):
@@ -51,17 +53,11 @@ class Product(models.Model):
     model = models.CharField(max_length=100, null=True,  blank=True)
     bar_code = models.CharField(max_length=100, null=True,  blank=True)
     image_url = models.CharField(max_length=100, null=True,  blank=True)
+    min_quantity_to_end = models.PositiveIntegerField(default=5, null=True, blank=True)
+    about_to_end = models.BooleanField(default=True, null=True, blank=True)
+
 
     history = HistoricalRecords()
-
-
-    # image = models.ImageField(upload_to="products")
-    # marked_price = models.PositiveIntegerField()
-    # selling_price = models.PositiveIntegerField()
-    # description = models.TextField()
-    # warranty = models.CharField(max_length=300, null=True, blank=True)
-    # return_policy = models.CharField(max_length=300, null=True, blank=True)
-    # view_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -69,6 +65,10 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if self.quantity <= 0:
             self.exist_in_stock = False
+        if self.quantity <= self.min_quantity_to_end:
+            self.about_to_end = True
+        if self.quantity > self.min_quantity_to_end:
+            self.about_to_end = False
         super(Product, self).save(*args, **kwargs)
     
     class Meta:
@@ -123,7 +123,15 @@ class Order(models.Model):
     def __str__(self):
         return "Order: " + str(self.id)
 
-
+# method for updating
+@receiver(post_save, sender=Order)
+def update_approved(sender, instance, **kwargs):
+    if instance.order_status == 'Approved':
+        all_cart_products = instance.cart.cartproduct_set.all()
+        for single_cart_product in all_cart_products:
+            the_product = single_cart_product.product
+            the_product.quantity -= single_cart_product.quantity
+            the_product.save()
 
 
 

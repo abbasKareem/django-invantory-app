@@ -66,11 +66,13 @@ class ProductDetailsView(EcomMixin, TemplateView):
         return context
 
 
-class AddToCartView(EcomMixin, TemplateView):
-    template_name = 'addtocart.html'
+class AddToCartView(EcomMixin, View):
+    # template_name = 'addtocart.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
+        # context = super().get_context_data(**kwargs)
+
         # get prdouct id from requested url
         product_id = self.kwargs['pro_id']
 
@@ -92,11 +94,13 @@ class AddToCartView(EcomMixin, TemplateView):
                 cartproduct.save()
                 # cart_obj.total += product_obj.selling_price
                 cart_obj.save()
+                return redirect("ecomapp:mycart")
 
             # new item is added in cart
             else:
                 cartproduct = CartProduct.objects.create(cart=cart_obj, product=product_obj,quantity=1)
                 cart_obj.save()
+                return redirect("ecomapp:mycart")
 
         else:
             cart_obj = Cart.objects.create(total=0)
@@ -104,8 +108,10 @@ class AddToCartView(EcomMixin, TemplateView):
 
             cartproduct = CartProduct.objects.create(cart=cart_obj,product=product_obj,quantity=1)
             cart_obj.save()
+            return redirect("ecomapp:mycart")
 
-        return context
+        # return context
+        return redirect("ecomapp:mycart")
 
 
 class ManageCartView(EcomMixin, View):
@@ -380,9 +386,6 @@ class AdminOrderDetailView(AdminRequiredMixin, DeleteView):
 
 class AdminOrdersListView(AdminRequiredMixin, ListView):
     template_name = 'adminpages/adminorderslist.html'
-    queryset = Order.objects.all().order_by("-id")
-    context_object_name = "allorders"
-
 
 class AdminOrderStatusChangeView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):

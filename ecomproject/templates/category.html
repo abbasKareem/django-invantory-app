@@ -33,6 +33,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <small class="text-muted">{{ product.created_at }}</small>
                 </div>
+                <a href=" {% url 'ecomapp:addtocart' product.id %} " class='btn btn-info my-3'>Add To Cart</a>
               </div>
           </div>
         </div>

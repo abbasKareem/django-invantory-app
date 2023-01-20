@@ -62,25 +62,32 @@ export_as_csv.short_description = "Download Item"
 
 
 class ProductAdmin(SimpleHistoryAdmin, ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ['name', 'quantity', 'created_at', 'category',
-                    'jira_number', 'bar_code', 'model', 'exist_in_stock']
+    list_display = ['name', 'quantity', 'category', 'about_to_end',
+                    'jira_number','exist_in_stock', 'bar_code', 'model', 'created_at']
 
     actions = [export_as_csv, export_as_pdf]
-    search_fields = ['name', 'quantity']
-    list_filter = ['created_at', 'exist_in_stock', 'category']
+    search_fields = ['name', 'quantity', 'jira_number']
+    list_filter = ['created_at', 'exist_in_stock', 'category', 'about_to_end']
     list_per_page = 20
+    readonly_fields = ["about_to_end"]
+
     prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['quantity', 'exist_in_stock', 'jira_number']
+    # list_editable = ['quantity', 'exist_in_stock', 'jira_number']
     history_list_display = ['name', 'quantity',  'category',
                             'jira_number', 'bar_code', 'exist_in_stock']
-
+                            
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['id', 'title', 'number_of_products']
     prepopulated_fields = {'slug': ('title',)}
 
 
-admin.site.register(Category, CategoryAdmin)
+    readonly_fields = ["number_of_products"]
+
+    def number_of_products(self, obj):
+        return obj.product_set.count()
 
 
 
@@ -89,8 +96,9 @@ admin.site.register(Category, CategoryAdmin)
 class OrderAdmin(SimpleHistoryAdmin,admin.ModelAdmin):
     list_display = ['ordered_by', 'order_status', 'created_at',  'jira_number']
     ordering = ['-created_at']
-    list_filter = ['created_at', 'order_status', 'ordered_by']
+    list_filter = ['created_at', 'order_status', 'ordered_by', "cart__cartproduct__product__category"]
     history_list_display = ['order_status']
+    search_fields = ["cart__cartproduct__product__name", 'jira_number']
 
     list_per_page = 20
 
@@ -103,6 +111,9 @@ class OrderAdmin(SimpleHistoryAdmin,admin.ModelAdmin):
 
     readonly_fields = ["total_items",
                        "username", "item_order", "jira_number"]
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def username(self, obj):
         return obj.ordered_by
@@ -128,5 +139,6 @@ class OrderAdmin(SimpleHistoryAdmin,admin.ModelAdmin):
 
 admin.site.register([Admin])
 
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
