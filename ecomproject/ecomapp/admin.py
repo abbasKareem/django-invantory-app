@@ -112,8 +112,8 @@ class OrderAdmin(SimpleHistoryAdmin,admin.ModelAdmin):
     readonly_fields = ["total_items",
                        "username", "item_order", "jira_number"]
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
     def username(self, obj):
         return obj.ordered_by

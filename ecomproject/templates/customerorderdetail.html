@@ -122,7 +122,7 @@
             <div class="row mb-2 mx-auto" >
                 <p class="mr-3">Download order: </p>
                 
-                <a href="{% url 'ecomapp:download-order' ord_obj.id %}" >
+                <!-- <a href="{% url 'ecomapp:download-order' ord_obj.id %}" >
                  <button class="btn btn-primary" {% if ord_obj.order_status != 'Approved' %} disabled {% endif %}>
                 {% if ord_obj.order_status != 'Approved' %}
                         <div class="loader"></div>
@@ -130,7 +130,18 @@
                 Download
                 {% endif %}
                 </button> 
-                 </a>
+                 </a> -->
+                 {% if ord_obj.order_status == 'Approved' %}
+                <a href="{% url 'ecomapp:download-order' ord_obj.id %}" >
+                 <button class="btn btn-primary" >
+
+                Download
+              </button> 
+            </a>
+
+            {% else %}
+            <button  class="btn btn-primary"  disabled >Download</button> 
+            {% endif %}
                 
             </div>
             <hr>

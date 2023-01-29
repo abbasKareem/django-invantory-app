@@ -160,7 +160,7 @@ class CheckoutView(EcomMixin, CreateView):
     form_class = CheckoutForm
 
     # after submit the form redirect to url
-    success_url = reverse_lazy("ecomapp:home")
+    success_url = reverse_lazy("ecomapp:customerprofile")
 
     # this method will run before all other method in this class
     def dispatch(self, request, *args, **kwargs):

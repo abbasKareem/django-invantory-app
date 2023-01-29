@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-e(bz2ma6*8_-qy0n6t8z0)0!$kpn@s#00g)ypyh0buoun&*6nz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['192.168.0.107', 'localhost', '127.0.0.1']
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
     "site_title": "Admin",
