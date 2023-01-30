@@ -203,6 +203,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap',
+    'fontawesome',
     'import_export',
     'simple_history',
     'ecomapp',

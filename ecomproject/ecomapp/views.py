@@ -36,10 +36,12 @@ class HomeView(EcomMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['myname'] = "abbas Kareem"
         all_products = Product.objects.filter(exist_in_stock=True).order_by('-id')
+        all_category = Category.objects.all()
         paginator = Paginator(all_products, 10)
         page_number = self.request.GET.get('page')
         product_list = paginator.get_page(page_number)
         context['product_list'] = product_list
+        context['all_category'] = all_category
         return context
 
 
@@ -448,7 +450,7 @@ def not_login_user(request):
 
 def category_list(request, category_slug=None):
     category = get_object_or_404(Category, slug=category_slug)
-    products = Product.objects.filter(category=category)
+    products = Product.objects.filter(category=category).order_by('-id')
     return render(request, 'category.html', {'category': category, 'products': products})
 
 

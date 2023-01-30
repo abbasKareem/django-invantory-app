@@ -77,7 +77,7 @@ class ProductAdmin(SimpleHistoryAdmin, ImportExportModelAdmin, admin.ModelAdmin)
                             'jira_number', 'bar_code', 'exist_in_stock']
                             
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'number_of_products']
@@ -96,7 +96,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class OrderAdmin(SimpleHistoryAdmin,admin.ModelAdmin):
     list_display = ['ordered_by', 'order_status', 'created_at',  'jira_number']
     ordering = ['-created_at']
-    list_filter = ['created_at', 'order_status', 'ordered_by', "cart__cartproduct__product__category"]
+    list_filter = ['created_at', 'order_status', 'ordered_by', "cart__cartproduct__product__category__title"]
     history_list_display = ['order_status']
     search_fields = ["cart__cartproduct__product__name", 'jira_number']
 
